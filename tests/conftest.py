@@ -6,9 +6,17 @@ from datetime import datetime, timedelta
 from unittest.mock import MagicMock
 import sys
 
-# Mock heavy dependencies for faster test startup
-sys.modules['sqlalchemy'] = MagicMock()
-sys.modules['pyodbc'] = MagicMock()
+# Mock heavy dependencies that require compilation or system libraries
+for mod in [
+    'pyodbc',
+    'sqlalchemy', 'sqlalchemy.orm', 'sqlalchemy.engine',
+    'azure', 'azure.storage', 'azure.storage.blob', 'azure.identity',
+    'loguru', 'loguru._logger',
+]:
+    sys.modules.setdefault(mod, MagicMock())
+
+# Ensure loguru mock has a usable logger attribute
+sys.modules['loguru'].logger = MagicMock()
 
 
 @pytest.fixture
