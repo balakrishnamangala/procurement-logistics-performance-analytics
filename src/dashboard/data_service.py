@@ -40,9 +40,19 @@ class DashboardDataService:
         except Exception as e:
             logger.warning(f"Data refresh failed, using cache: {e}")
             if self._po_cache is None:
-                self._po_cache = pd.DataFrame()
+                self._po_cache = pd.DataFrame(columns=[
+                    "po_number", "po_item", "supplier_id", "material_group",
+                    "po_date", "requested_date", "order_quantity", "receipt_quantity",
+                    "defect_quantity", "unit_price", "actual_receipt_date", "net_value",
+                    "lead_time_days", "is_on_time", "is_in_full", "is_otif",
+                ])
             if self._shipment_cache is None:
-                self._shipment_cache = pd.DataFrame()
+                self._shipment_cache = pd.DataFrame(columns=[
+                    "shipment_id", "carrier_id", "origin_id", "destination_id",
+                    "transport_mode", "planned_delivery", "freight_cost",
+                    "accessorial_cost", "weight", "units", "dwell_time_hours",
+                    "exception_flag", "exception_type", "actual_delivery", "delay_hours",
+                ])
 
         return self._po_cache, self._shipment_cache
 
