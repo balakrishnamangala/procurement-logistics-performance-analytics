@@ -1,0 +1,33 @@
+sources:
+  sap_s4hana:
+    host: "${SAP_HOST}"
+    client: "100"
+    tables:
+      purchase_orders: "EKKO"
+      po_items: "EKPO"
+      goods_receipt: "MKPF"
+      vendor_master: "LFA1"
+  sap_ewm:
+    host: "${EWM_HOST}"
+    warehouse_number: "WH01"
+    tables:
+      inbound_deliveries: "/SCWM/DLVH"
+      warehouse_tasks: "/SCWM/WHST"
+      stock_overview: "/SCWM/AQUA"
+  tms:
+    api_url: "${TMS_API_URL}"
+    api_key: "${TMS_API_KEY}"
+    endpoints:
+      shipments: "/api/v1/shipments"
+      carriers: "/api/v1/carriers"
+      tracking: "/api/v1/tracking"
+
+database:
+  connection_string: "${DATABASE_URL}"
+  schema: "logistics_dw"
+  batch_size: 10000
+
+schedule:
+  refresh_interval_minutes: 15
+  full_load_cron: "0 2 * * *"
+  incremental_field: "changed_at"

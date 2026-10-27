@@ -1,0 +1,43 @@
+kpi_tiles:
+  - name: "OTIF Rate"
+    metric: "otif_rate"
+    format: "percentage"
+    target: 0.95
+    warning_threshold: 0.90
+  - name: "OTD Rate"
+    metric: "otd_rate"
+    format: "percentage"
+    target: 0.95
+    warning_threshold: 0.90
+  - name: "Avg Dwell Time"
+    metric: "avg_dwell_hours"
+    format: "hours"
+    target: 24
+    warning_threshold: 36
+  - name: "Freight Cost/Unit"
+    metric: "cost_per_unit"
+    format: "currency"
+    target: 2.50
+    warning_threshold: 3.00
+  - name: "Exception Rate"
+    metric: "exception_rate"
+    format: "percentage"
+    target: 0.05
+    warning_threshold: 0.10
+  - name: "High Risk Suppliers"
+    metric: "high_risk_count"
+    format: "integer"
+    target: 0
+    warning_threshold: 5
+
+trends:
+  default_window_weeks: 12
+  chart_types:
+    otif_trend: "line"
+    carrier_performance: "bar"
+    lane_cost: "heatmap"
+    exception_pareto: "pareto"
+
+refresh:
+  interval_minutes: 15
+  cache_ttl_seconds: 300

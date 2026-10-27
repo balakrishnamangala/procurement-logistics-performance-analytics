@@ -1,0 +1,36 @@
+risk_scorecard:
+  weights:
+    lead_time_variability: 0.30
+    otif_trend: 0.25
+    defect_rate: 0.25
+    spend_concentration: 0.20
+
+  thresholds:
+    high_risk: 70
+    medium_risk: 40
+    low_risk: 0
+
+  lead_time:
+    cv_high: 0.35
+    cv_medium: 0.20
+    lookback_weeks: 26
+
+  otif:
+    target: 0.95
+    critical_threshold: 0.85
+    trend_window_weeks: 12
+
+  defect:
+    acceptable_rate: 0.02
+    critical_rate: 0.05
+    lookback_months: 6
+
+  spend:
+    hhi_high: 2500
+    hhi_medium: 1500
+    top_supplier_warning: 0.40
+
+scoring:
+  scale: 100
+  normalization: "min_max"
+  update_frequency: "weekly"
