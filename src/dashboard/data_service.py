@@ -58,6 +58,15 @@ class DashboardDataService:
 
     def get_dashboard_kpis(self, from_date=None, to_date=None, warehouse_id=None) -> list:
         po_data, ship_data = self._get_data()
+        if po_data.empty and ship_data.empty:
+            return [
+                {"name": "OTIF Rate", "value": 0, "unit": "%", "target": 95.0},
+                {"name": "OTD Rate", "value": 0, "unit": "%", "target": 97.0},
+                {"name": "Avg Dwell Time", "value": 0, "unit": "hrs", "target": 4.0},
+                {"name": "Freight Cost/Unit", "value": 0, "unit": "$"},
+                {"name": "Exception Rate", "value": 0, "unit": "%", "target": 2.0},
+                {"name": "High Risk Suppliers", "value": 0, "unit": ""},
+            ]
 
         otif_result = self.otif_calc.calculate(po_data)
         otd_result = self.otd_calc.calculate(ship_data)
@@ -108,7 +117,23 @@ class DashboardDataService:
 
     def get_supplier_scorecard(self, risk_tier=None):
         po_data, _ = self._get_data()
+        if po_data.empty:
+            return {
+                "total_suppliers": 0,
+                "high_risk_count": 0,
+                "medium_risk_count": 0,
+                "low_risk_count": 0,
+                "suppliers": [],
+            }
         scores = self.scorer.score_all(po_data)
+        if scores.empty:
+            return {
+                "total_suppliers": 0,
+                "high_risk_count": 0,
+                "medium_risk_count": 0,
+                "low_risk_count": 0,
+                "suppliers": [],
+            }
         if risk_tier:
             scores = scores[scores["risk_tier"] == risk_tier.value]
         return {
@@ -121,6 +146,8 @@ class DashboardDataService:
 
     def get_supplier_detail(self, supplier_id: str):
         po_data, _ = self._get_data()
+        if po_data.empty:
+            return None
         supplier_pos = po_data[po_data["supplier_id"] == supplier_id]
         if supplier_pos.empty:
             return None
@@ -131,10 +158,14 @@ class DashboardDataService:
 
     def get_high_risk_suppliers(self):
         po_data, _ = self._get_data()
+        if po_data.empty:
+            return []
         return self.scorer.get_high_risk_suppliers(po_data).to_dict(orient="records")
 
     def get_supplier_otif_trend(self, supplier_id=None, months=6):
         po_data, _ = self._get_data()
+        if po_data.empty:
+            return []
         if supplier_id:
             po_data = po_data[po_data["supplier_id"] == supplier_id]
         otif = self.otif_calc.calculate(po_data)
